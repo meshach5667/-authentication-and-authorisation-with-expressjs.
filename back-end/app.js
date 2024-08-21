@@ -7,42 +7,20 @@ const morgan = require("morgan");
 const cors = require("cors");
 
 const app = express();
-const PORT = process.env.PORT | 4001;
+const PORT = process.env.PORT || 4001; // Fixing the PORT assignment
 app.use(morgan("tiny"));
 
 const corsOptions = {
-  origin: true,
-  credentials: true, //included credentials as true
-  preflightContinue: true,
+  origin: 'https://5500-meshach5667-authenticat-z1bqzyador3.ws-eu115.gitpod.io', // Replace with your frontend's URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true, // Enable if you need to send cookies or authorization headers
 };
 app.use(cors(corsOptions));
 
 app.use(cookieParser(process.env.TOKEN_KEY));
 
-var jsonParser = bodyParser.json();
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
-);
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-app.use(function (req, res, next) {
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-  );
-  res.header(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type,Content-Type, Authorization,Authentication,withCredentials, Content-Length, X-Requested-With, Accept, x-access-token,credentials, Origin, X-Content-Type-Options"
-  );
-  res.header(
-    "Access-Control-Expose-Headers",
-    "x-access-token, Authorization, Authentication, withCredentials, credentials, Set-Cookie"
-  );
-  res.header("Access-Control-Allow-Credentials", true);
-  next();
-});
 
 // App Routes
 app.use("/auth", require("./routes/authHandling"));
